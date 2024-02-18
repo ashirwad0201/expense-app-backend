@@ -1,6 +1,11 @@
 const Userdetail=require('../models/userdetail');
 const bcrypt=require('bcrypt');
+const jwt= require('jsonwebtoken');
 
+function generateAccessToken(id, name){
+  console.log(id,name)
+  return jwt.sign({userId: id, name: name},'secretkey');
+}
 exports.insertUser = (req, res, next) => {
   var myObj=req.body;
   console.log(myObj)
@@ -46,18 +51,18 @@ exports.loginUser = (req, res, next) => {
   })
   .then(userdetail=>{
       if(userdetail[0]==undefined){
-        res.status(404).json("User doesn't exist");
+        res.status(404).json({message:"User doesn't exist"});
       }
       else{
           bcrypt.compare(myObj.password,userdetail[0].password,(err,result)=>{
             if(err){
-              res.status(500).json("Something went wrong");
+              res.status(500).json({message:"Something went wrong"});
             }
             if(result===true){
-              res.status(200).json("Logged in successfully");
+              res.status(200).json({message:"Logged in successfully",token: generateAccessToken(userdetail[0].id,userdetail[0].username)});
             }
             else{
-              res.status(401).json("Password incorrect!");
+              res.status(401).json({message:"Password incorrect!"});
             }
           })
       }      

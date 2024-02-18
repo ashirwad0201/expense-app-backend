@@ -2,7 +2,7 @@ const Expense = require('../models/expense');
 
 exports.insertExpense = (req, res, next) => {
     let myObj = req.body
-    Expense.create(myObj)
+    req.user.createExpense(myObj)
     .then(result=>{
       console.log('Created expense');
       res.redirect('/get-expense')
@@ -16,7 +16,8 @@ exports.deleteExpense = (req,res,next)=>{
     const id=req.params.id;
      Expense.destroy({
         where: {
-          id: id
+          id: id,
+          userdetailId: req.user.id
         },
       })
     .then((result)=>{
@@ -27,7 +28,7 @@ exports.deleteExpense = (req,res,next)=>{
 }
 
 exports.getExpense =(req,res,next)=>{
-    Expense.findAll()
+    req.user.getExpenses()
     .then((result)=>{
         res.json(result)
     })
