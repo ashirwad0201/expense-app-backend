@@ -38,41 +38,27 @@ exports.getUser=(req,res,next)=>{
 }
 
 exports.loginUser = (req, res, next) => {
-  var myObj=req.body;
-  console.log(myObj)
-  console.log('hi')
-   
+  var myObj=req.body; 
   Userdetail.findAll({
     where:{
         email : myObj.email
     }
   })
   .then(userdetail=>{
-      var result=userdetail[0];
-      console.log('Got user details');
-      var response="";
-      console.log(result)
-      if(result==undefined){
-        res.status(404);
-        response="User doesn't exist";
-        return res.json(response)
+      if(userdetail[0]==undefined){
+        res.status(404).json("User doesn't exist");
       }
       else{
-          var pass=result.password;
-          bcrypt.compare(myObj.password,pass,(err,result)=>{
+          bcrypt.compare(myObj.password,userdetail[0].password,(err,result)=>{
             if(err){
-              res.status(500);
-              response="Something went wrong";
+              res.status(500).json("Something went wrong");
             }
             if(result===true){
-              res.status(200);
-              response="Logged in successfully";
+              res.status(200).json("Logged in successfully");
             }
             else{
-              res.status(401)
-              response="Password incorrect!";
+              res.status(401).json("Password incorrect!");
             }
-            return res.json(response)
           })
       }      
   })
