@@ -18,6 +18,7 @@ exports.insertUser = (req, res, next) => {
       Userdetail.create(myObj)
       .then(result=>{
         console.log('user created');
+        res.json();
       })
       .catch(err => {
         console.log(err)
@@ -69,3 +70,8 @@ exports.loginUser = (req, res, next) => {
   })
   .catch(err=>console.log(err))
  };
+
+ exports.isPremiumUser=(req,res,next)=>{
+  console.log(req.user.ispremiumuser)
+  res.status(201).json({isPremium : req.user.ispremiumuser});
+ }
