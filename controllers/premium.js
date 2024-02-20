@@ -3,7 +3,6 @@ const Userdetail=require('../models/userdetail');
 const sequelize = require('../util/database');
 
 exports.getLeaderBoard=async (req,res,next)=>{
-    
     try{
         const leaderboard=await Userdetail.findAll({
             attributes: ['username','totalexpense']
