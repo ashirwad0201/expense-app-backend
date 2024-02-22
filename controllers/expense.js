@@ -87,10 +87,10 @@ exports.deleteIncome = async (req,res,next)=>{
   }
 
 }
-const ITEMS_PER_PAGE=3;
 exports.getExpense =async (req,res,next)=>{
   try{
     const page=+req.query.page || 1;
+    const ITEMS_PER_PAGE=+req.query.itemsPerPage || 2;
     const totalItems=await Expense.count({
       where:{userdetailId: req.user.id}
     });
