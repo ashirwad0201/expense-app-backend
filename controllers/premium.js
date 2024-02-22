@@ -22,7 +22,7 @@ exports.getMonthlyReport=async (req,res,next)=>{
         const Obj=req.query;
         const year=Obj.year;
         const month=Obj.month;
-        const startDate=new Date(year,month-1,1);
+        const startDate=new Date(year,month-1,1); 
         const endDate=new Date(year,month,0);
         const userId=req.user.id;
         const expenses=await Expense.findAll({
