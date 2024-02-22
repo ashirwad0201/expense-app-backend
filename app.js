@@ -12,6 +12,7 @@ const UserDetail = require('./models/userdetail');
 const Expense = require('./models/expense')
 const Income = require('./models/income')
 const Order=require('./models/order')
+const Download=require('./models/download')
 const FPR=require('./models/forgotPasswordRequest')
 const app = express();
 app.use(cors());
@@ -32,6 +33,9 @@ Income.belongsTo(UserDetail);
 
 UserDetail.hasMany(Order);
 Order.belongsTo(UserDetail);
+
+UserDetail.hasMany(Download);
+Download.belongsTo(UserDetail);
 
 UserDetail.hasMany(FPR);
 FPR.belongsTo(UserDetail);

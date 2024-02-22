@@ -87,13 +87,36 @@ exports.deleteIncome = async (req,res,next)=>{
   }
 
 }
-
-exports.getExpense =(req,res,next)=>{
-    req.user.getExpenses()
-    .then((result)=>{
-        res.json(result)
+const ITEMS_PER_PAGE=3;
+exports.getExpense =async (req,res,next)=>{
+  try{
+    const page=+req.query.page || 1;
+    const totalItems=await Expense.count({
+      where:{userdetailId: req.user.id}
+    });
+    const expenses=await Expense.findAll({
+      where:{userdetailId: req.user.id},
+      offset:(page-1)*ITEMS_PER_PAGE,
+      limit: ITEMS_PER_PAGE
     })
-    .catch(err=>console.log(err));
+    console.log(expenses);
+    res.json({
+      expenses: expenses,
+      currentPage: page,
+      hasNextPage: ITEMS_PER_PAGE*page<totalItems,
+      nextPage: page+1,
+      hasPreviousPage: page>1,
+      previousPage:page-1,
+      lastPage: Math.ceil(totalItems/ITEMS_PER_PAGE),
+    })
+  }catch(err){
+    res.status(500).json({error:"something went wrong"});
+  }
+    // req.user.getExpenses()
+    // .then((result)=>{
+    //     res.json(result)
+    // })
+    // .catch(err=>console.log(err));
 };
 
 exports.getIncome =(req,res,next)=>{
