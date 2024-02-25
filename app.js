@@ -21,6 +21,7 @@ const FPR=require('./models/forgotPasswordRequest');
 const path = require('path');
 const app = express();
 const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});
+app.use(express.static('public'));
 app.use(cors());
 app.use(helmet());
 app.use(compression());
