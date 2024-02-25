@@ -35,7 +35,7 @@ app.use('/premium',premiumRoutes);
 app.use('/password',resetRoutes);
 app.use((req,res)=>{
     const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1' || req.hostname === '::1';
-    res.redirect(`http://${isLocalhost?req.hostname:req.ip}:5000/login/login.html`);
+    res.redirect(`http://${isLocalhost?req.hostname:req.hostname}:5000/public/login/login.html`);
 })
 
 UserDetail.hasMany(Expense);
