@@ -32,6 +32,9 @@ app.use(expenseRoutes);
 app.use(purchaseRoutes);
 app.use('/premium',premiumRoutes);
 app.use('/password',resetRoutes);
+app.use((req,res)=>{
+    res.sendFile(path.join(__dirname,`public/login/login.html`));
+})
 
 UserDetail.hasMany(Expense);
 Expense.belongsTo(UserDetail);
