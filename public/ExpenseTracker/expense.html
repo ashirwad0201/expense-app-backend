@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <title>Item Lister</title>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card card-body">
+            <form class="form-inline mb-3">
+                <label>Choose amount</label>
+                <input type="number" id="idk1" class="form-control mr-2">
+                <label>Choose description</label>
+                <input type="text" id="idk2" class="form-control mr-2">
+                <label >Choose a category</label>
+                <select name="category" id="idk3" class="form-control mr-2">
+                    <option value="fuel">fuel</option>
+                    <option value="food">food</option>
+                    <option value="electricity">electricity</option>
+                    <option value="movies">movies</option>
+                    <option value="education">education</option>
+                    <option value="transport">transport</option>
+                    <option value="health">health</option>
+                    <option value="salary">salary</option>
+                </select>
+                <input onclick="tracker()" type="button" value="Add Expense" id="idk4" class="btn btn-dark">
+            </form>
+            <button id="idk5">Buy Premium</button>
+            <div id="idk6" style="display: none;">
+                <p>You are a premium user now.<button class="btn" id="idk7">Show leaderboard</button></p>
+                <input id="idk8" type="month">
+                <button class="btn" id="idk9" onclick="report()">Show Report</button>
+                <ul id="list-downloads"></ul>
+            </div>
+            
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Expenses</h2>
+                        <select name="pages" id="idk11" onchange="itemsPerPage()">
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="8">8</option>
+                        </select>
+                        <ul id="list-items"></ul>
+                        <div id="paginate-expense"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h2>Incomes</h2>
+                        <ul id="list-income-items"></ul>
+
+                    </div>
+                </div>
+            </div>
+            <div id="idk10" style="display: none;">
+                <h2>Leader Board</h2>
+                <ul id="list-items2" class="list-group"></ul>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="../config.js"></script>
+    <script src="expense.js"></script>
+</body>
+</html>
