@@ -21,12 +21,6 @@ const FPR=require('./models/forgotPasswordRequest');
 const path = require('path');
 const app = express();
 const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});
-app.use((req, res, next) => {
-    if (!req.secure) {
-      return res.redirect('http://' + req.headers.host + req.url);
-    }
-    next();
-  });
 app.use(express.static('public'));
 app.use(cors());
 app.use(helmet());
@@ -40,7 +34,8 @@ app.use(purchaseRoutes);
 app.use('/premium',premiumRoutes);
 app.use('/password',resetRoutes);
 app.use((req,res)=>{
-    res.sendFile(path.join(__dirname,`public/login/login.html`));
+    const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1' || req.hostname === '::1';
+    res.redirect(`http://${isLocalhost?req.hostname:req.ip}:5000/login/login.html`);
 })
 
 UserDetail.hasMany(Expense);
