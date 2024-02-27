@@ -34,7 +34,7 @@ app.use(purchaseRoutes);
 app.use('/premium',premiumRoutes);
 app.use('/password',resetRoutes);
 app.use((req,res)=>{
-    res.redirect(`http://${req.hostname}:5000/login/login.html`);
+    res.redirect(`http://${req.hostname}/login/login.html`);
 })
 
 UserDetail.hasMany(Expense);
