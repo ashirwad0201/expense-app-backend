@@ -19,6 +19,9 @@ function onLogin(e){
             alert(err.response.data.message)
         }); 
     }
+    else{
+        alert('Please fill the empty fields!')
+    }
 }
 
 document.getElementById('idx3').onclick = function(e){

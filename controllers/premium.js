@@ -96,7 +96,7 @@ exports.getYearlyReport=async (req,res,next)=>{
         yearReport.forEach(report=>{
             report.savings=report.income-report.expense;
         })
-        const filteredReport=yearReport.filter(report=>report.income !==0 && report.expense !==0 && report.savings!==0)
+        const filteredReport=yearReport.filter(report=>report.income !==0 || report.expense !==0 || report.savings!==0)
         res.status(200).json(filteredReport)
     }catch(err){
         console.log(err);
@@ -110,8 +110,10 @@ exports.downloadexpense = async(req,res,next)=>{
         const Obj1= req.query;
         const stringifiedExpenses= JSON.stringify(Obj1);
         const userId = req.user.id;
-
-        const filename=`Expense${userId}/${new Date()}.txt`;
+        const currentDate = new Date();
+        const currentDateTime = currentDate.toLocaleString();
+        console.log(currentDateTime)
+        const filename=`Expense${userId}/${currentDateTime}.txt`;
         const fileUrl= await S3Service.uploadToS3(stringifiedExpenses, filename);
         await req.user.createDownload({name:filename, url:fileUrl})
         res.status(200).json({fileUrl, success:true})

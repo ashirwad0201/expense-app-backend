@@ -120,6 +120,7 @@ async function download(){
             var a=document.createElement("a");
             a.href=response.data.fileUrl;
             a.download='myexpense'
+            a.click();
         }
     }catch(err){
         alert("Something Went wrong ",err)

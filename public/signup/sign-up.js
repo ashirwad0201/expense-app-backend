@@ -30,4 +30,7 @@ function onSignUp(e){
         })
         .catch(err=>console.log(err))
     }
+    else{
+        alert('Please fill the empty fields!')
+    }
 }

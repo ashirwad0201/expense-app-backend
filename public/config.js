@@ -1,1 +1,1 @@
-const API_ENDPOINT='http://16.171.42.46:5000/'
+const API_ENDPOINT='http://localhost:5000/'

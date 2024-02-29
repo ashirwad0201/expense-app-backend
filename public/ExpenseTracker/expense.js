@@ -1,11 +1,11 @@
 
-var list=document.getElementById('list-items');
-var incomelist=document.getElementById('list-income-items');
-var downloadlist=document.getElementById('list-downloads');
+var expenseTable = document.querySelector('#table-expense tbody');
+var incomeTable = document.querySelector('#table-income tbody');
+var downlaodsTable = document.querySelector('#table-downloads tbody');
 var leaderboardList=document.getElementById('list-items2');
 var pagination=document.getElementById('paginate-expense');
-list.addEventListener('click' ,removeElement);
-incomelist.addEventListener('click' ,removeElement);
+expenseTable.addEventListener('click' ,removeElement);
+incomeTable.addEventListener('click' ,removeElement);
 const token=localStorage.getItem('token');
 var isPremium=false;
 
@@ -19,12 +19,12 @@ function itemsPerPage(){
 function getExpense(page){
     console.log("hi i am token")
     console.log(token)
-    list.innerHTML = "";
+    expenseTable.innerHTML = "";
     axios.get(`${API_ENDPOINT}get-expense/?page=${page}&itemsPerPage=${localStorage.getItem('itemsPerPage')}`,{headers:{"authorization": token}})
     .then(
         (response)=>{
             for(var i=0;i<response.data.expenses.length;i++){
-                showData(response.data.expenses[i]);
+                showData2(response.data.expenses[i]);
             }
             console.log(response.data)
             showPagination(response.data)
@@ -36,12 +36,12 @@ function getExpense(page){
 }
 function getSalary(){
     const page=1;
-    incomelist.innerHTML = "";
+    incomeTable.innerHTML = "";
     axios.get(`${API_ENDPOINT}get-income/?page=${page}`,{headers:{"authorization": token}})
     .then(
         (response)=>{
             for(var i=0;i<response.data.length;i++){
-                showData(response.data[i]);
+                showData2(response.data[i]);
             }
         }
     )
@@ -71,6 +71,7 @@ window.addEventListener('DOMContentLoaded',()=>{
         if(res.data.isPremium===true){
             document.getElementById('idk5').style.display='none';
             document.getElementById('idk6').style.display='block';
+            document.getElementById('table-downloads').style.display='block';
         }
     })
     .catch((err)=>console.log(err));
@@ -119,11 +120,13 @@ function showPagination({
     if(hasPreviousPage){
         const btn2=document.createElement('button')
         btn2.innerHTML=previousPage;
+        btn2.className="btn btn-secondary animated-button"
         btn2.addEventListener('click',()=>getExpense(previousPage))
         pagination.appendChild(btn2)
     }
     const btn1=document.createElement('button')
     btn1.innerHTML=`<h3>${currentPage}</h3>`
+    btn1.className="btn btn-primary"
     btn1.addEventListener('click',()=>getExpense(currentPage))
     pagination.appendChild(btn1)
     console.log(hasNextPage);
@@ -132,42 +135,83 @@ function showPagination({
         console.log("i am in")
         const btn3=document.createElement('button')
         btn3.innerHTML=nextPage;
+        btn3.className="btn btn-secondary animated-button-reverse"
         btn3.addEventListener('click',()=>getExpense(nextPage))
         pagination.appendChild(btn3)
     }
 }
-function showData(myObj){
+function showData2(myObj){
+    console.log("hi")
     console.log(myObj)
-    var newList=document.createElement('li');
-    newList.className="list-group-item"
-    var text=myObj.price+" - "+myObj.description+" - "+myObj.category+" - ";
-    newList.appendChild(document.createTextNode(text));
-    var delButton=document.createElement('button');
-    delButton.className="btn btn-danger btn-sm delete";
-    delButton.appendChild(document.createTextNode('Delete'));
-    newList.appendChild(delButton);
-    newList.setAttribute('item-id',myObj.id);
-    newList.setAttribute('item-price',myObj.price);
-    newList.setAttribute('item-category',myObj.category);
+    var row = document.createElement('tr');
+
+    // Create table cells
+    var priceCell = document.createElement('td');
+    priceCell.className='text-center'
+    priceCell.textContent = myObj.price;
+
+    var descriptionCell = document.createElement('td');
+    descriptionCell.className='text-center'
+    descriptionCell.textContent = myObj.description;
+
+    var categoryCell = document.createElement('td');
+    categoryCell.className='text-center'
+    categoryCell.textContent = myObj.category;
+
+    var actionCell = document.createElement('td');
+    actionCell.className='text-center'
+    var delButton = document.createElement('button');
+    delButton.className = 'btn btn-danger btn-sm delete';
+    delButton.textContent = 'Delete';
+    actionCell.appendChild(delButton);
+
+    // Append cells to the row
+    row.appendChild(categoryCell);
+    row.appendChild(descriptionCell);
+    row.appendChild(priceCell);
+    row.appendChild(actionCell);
+
+    row.setAttribute('item-id',myObj.id);
+    row.setAttribute('item-price',myObj.price);
+    row.setAttribute('item-category',myObj.category);
+
+    // Append row to the table body
     if(myObj.category=="salary"){
-        incomelist.appendChild(newList);
+        incomeTable.appendChild(row);
+        incomeTable.classList.add('table-responsive');
     }
     else{
-        list.appendChild(newList);
+        expenseTable.appendChild(row);
+        expenseTable.classList.add('table-responsive');
     }
 }
 
 function showDownload(myObj){
     console.log(myObj)
-    var newList=document.createElement('li');
-    newList.className="list-group-item"
+
+    console.log("hi in download")
+    console.log(myObj)
+    var row = document.createElement('tr');
+
+    // Create table cells
+    var  nameCell= document.createElement('td');
+    nameCell.className='text-center'
+    nameCell.textContent = myObj.name;
+
+    var urlCell = document.createElement('td');
+    urlCell.className='text-center'
     var a=document.createElement("a");
     a.href=myObj.url;
-    a.appendChild(document.createTextNode(myObj.url));
-    var text=myObj.name+" : "
-    newList.appendChild(document.createTextNode(text));
-    newList.appendChild(a)
-    downloadlist.appendChild(newList);
+    a.textContent = myObj.url;
+    urlCell.appendChild(a);
+
+    // Append cells to the row
+    row.appendChild(nameCell);
+    row.appendChild(urlCell);
+
+    // Append row to the table body
+    downlaodsTable.appendChild(row);
+    downlaodsTable.classList.add('table-responsive');
 }
 
 
@@ -175,22 +219,23 @@ function showDownload(myObj){
 function removeElement(e){
     if(e.target.classList.contains('delete')){
         if(confirm('Are you sure to delete ?')){
-            var li=e.target.parentElement;
-            const id=li.getAttribute('item-id')
-            const amount=li.getAttribute('item-price')
-            const categ=li.getAttribute('item-category')
-            console.log("amount-"+amount)
+            var row=e.target.parentElement.parentElement;
+            console.log(row)
+            const id=row.getAttribute('item-id')
+            const amount=row.getAttribute('item-price')
+            const categ=row.getAttribute('item-category')
+            console.log("amount-"+categ)
             if(categ=="salary"){
                 axios.delete(`${API_ENDPOINT}delete-income/${id}`,{params: {amount : amount},headers:{"authorization": token}})
                 .then(res=>console.log(res))
                 .catch(err=>console.log(err))
-                incomelist.removeChild(li);
+                incomeTable.removeChild(row);
             }
             else{
                 axios.delete(`${API_ENDPOINT}delete-expense/${id}`,{params: {amount : amount},headers:{"authorization": token}})
                 .then(res=>console.log(res))
                 .catch(err=>console.log(err))
-                list.removeChild(li);
+                expenseTable.removeChild(row);
             }
         }
     }
@@ -212,6 +257,7 @@ document.getElementById('idk5').onclick = async function(e){
             alert("You are a premium user now")
             document.getElementById('idk5').style.display='none';
             document.getElementById('idk6').style.display='block';
+            document.getElementById('table-downloads').style.display='block';
         }
     };
     const rzp1=new Razorpay(options);
