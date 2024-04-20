@@ -22,9 +22,16 @@ exports.getMonthlyReport=async (req,res,next)=>{
         const Obj=req.query;
         const year=Obj.year;
         const month=Obj.month;
+        const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        console.log(month);
+        console.log(isLeapYear)
         const startDate=new Date(year,month-1,1); 
-        const endDate=new Date(year,month,0);
+        const endDate=new Date(year,month,1);
         const userId=req.user.id;
+        console.log(startDate)
+        console.log(endDate)
+        console.log(new Date(year,month,1))
+        console.log(userId)
         const expenses=await Expense.findAll({
             where:{
                 userdetailId: userId,
@@ -41,7 +48,6 @@ exports.getMonthlyReport=async (req,res,next)=>{
         });
         let records=[...expenses,...incomes]
         records.sort((a,b)=>a.createdAt-b.createdAt);
-
         const response=records.map(record=>({
             date: record.createdAt.toLocaleDateString('en-GB'),
             category: record.category,
